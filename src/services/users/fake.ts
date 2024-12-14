@@ -1,5 +1,5 @@
 import FakeService from "services/base/fakeService";
-import { PaginatedUsers } from "./interface";
+import { UserData } from "./interface";
 
 const mockedUsers = [
   {
@@ -18,17 +18,14 @@ const mockedUsers = [
   },
 ];
 
-export class UsersFakeService extends FakeService<PaginatedUsers> {
+export class UsersFakeService extends FakeService<UserData[]> {
   constructor(latencyDuration = 0, errorProbability = 0) {
     super(latencyDuration, errorProbability);
   }
 
   async getAll() {
     return this.simulateRequest(
-      () => ({
-        list: mockedUsers,
-        total: mockedUsers.length,
-      }),
+      () => mockedUsers,
       () => {}
     );
   }

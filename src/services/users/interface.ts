@@ -8,11 +8,6 @@ export interface UserData {
   image: string;
 }
 
-export interface PaginatedUsers {
-  list: UserData[];
-  total: number;
-}
-
 export abstract class UsersService extends AuthedService {
-  abstract getAll(): Promise<PaginatedUsers>;
+  abstract getAll(): Promise<UserData[]>;
 }

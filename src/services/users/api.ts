@@ -1,12 +1,10 @@
-import { PaginatedUsers, UsersService } from "./interface";
+import { UsersService } from "./interface";
 
 export class UsersApiService extends UsersService {
   async getAll() {
-    const uri = "https://dummyjson.com/users";
+    const uri =
+      "https://dummyjson.com/users?limit=0&select=id,firstName,lastName,email,image";
     const response = await this.get(uri);
-    return {
-      list: response.users,
-      total: response.total,
-    } as PaginatedUsers;
+    return response.users;
   }
 }

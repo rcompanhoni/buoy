@@ -29,12 +29,23 @@ const columns = [
     dataIndex: "email",
     key: "email",
   },
+
+  // Reasons for rendering user images with the Ant Design <Image> component:
+  // * provides built-in lazy loading, reducing initial page load times for large datasets
+  // * includes a fallback to a placeholder image in case of a broken image link
+  // * offers built-in support for hover zoom and full-screen preview
   {
     title: "Image",
     dataIndex: "image",
     key: "image",
     render: (image: string) => (
-      <Image src={image} alt="User Image" width={50} height={50} />
+      <Image
+        src={image}
+        alt="User Image"
+        width={50}
+        height={50}
+        fallback="https://via.placeholder.com/50"
+      />
     ),
   },
 ];
@@ -68,10 +79,10 @@ export function Users() {
     <ContentLayout>
       <Title level={2}>Users</Title>
       <Table
-        dataSource={data?.list || []}
+        dataSource={data || []}
         columns={columns}
         rowKey="id"
-        pagination={{ pageSize: 13 }}
+        pagination={{ pageSize: 13, showSizeChanger: false }}
       />
     </ContentLayout>
   );
