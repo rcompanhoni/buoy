@@ -68,5 +68,16 @@
 
   "page.crudExamples.create.form.title.create.crudExample": "Crear crudExample",
   "page.crudExamples.tab.information.title.create.crudExample": "Información básica",
-  "page.crudExamples.form.crudExample.name": "Nombre"
+  "page.crudExamples.form.crudExample.name": "Nombre",
+
+  "page.users.table.column.title.id": "ID",
+  "page.users.table.column.title.first_name.placeholder": "Nombre",
+  "page.users.table.column.title.last_name.placeholder": "Apellido",
+  "page.users.table.column.title.name": "Nombre Completo",
+  "page.users.table.column.title.email": "Correo Electrónico",
+  "page.users.table.column.title.image": "Imagen",
+  "page.users.alert.message": "Error",
+  "page.users.alert.description": "No se pudieron obtener los usuarios",
+  "page.users.spin.tip": "Cargando usuarios...",
+  "page.users.title": "Usuarios"
 }

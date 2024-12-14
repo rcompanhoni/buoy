@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useState, useMemo } from "react";
 import { debounce } from "lodash";
 import { Table, Typography, Spin, Alert, Image, Input } from "antd";
@@ -7,6 +8,7 @@ import ContentLayout from "components/layout/content/contentLayout";
 import { useGetUsers } from "hooks/react-query/users/useGetUsers";
 
 export function Users() {
+  const { formatMessage } = useIntl();
   const { data, isLoading, isError } = useGetUsers();
   const [filters, setFilters] = useState({ firstName: "", lastName: "" });
 
@@ -18,8 +20,8 @@ export function Users() {
     300
   );
 
-  // apply both filters to the data
-  // useMemo ensures that filteredData is only recomputed when either "data" or "filters" have changed
+  // apply both filters to get filteredData
+  // useMemo ensures that filteredData is only recomputed when either data or one of the filters have changed
   const filteredData = useMemo(() => {
     if (!data) return [];
 
@@ -38,14 +40,16 @@ export function Users() {
 
   const columns: ColumnsType<UserData> = [
     {
-      title: "ID",
+      title: formatMessage({ id: "page.users.table.column.title.id" }),
       dataIndex: "id",
       key: "id",
     },
     {
       title: (
         <Input
-          placeholder="First Name"
+          placeholder={formatMessage({
+            id: "page.users.table.column.title.first_name.placeholder",
+          })}
           onChange={(e) => handleFilterChange("firstName", e.target.value)}
           allowClear
         />
@@ -56,7 +60,9 @@ export function Users() {
     {
       title: (
         <Input
-          placeholder="Last Name"
+          placeholder={formatMessage({
+            id: "page.users.table.column.title.last_name.placeholder",
+          })}
           onChange={(e) => handleFilterChange("lastName", e.target.value)}
           allowClear
         />
@@ -65,12 +71,12 @@ export function Users() {
       key: "lastName",
     },
     {
-      title: "Name",
+      title: formatMessage({ id: "page.users.table.column.title.name" }),
       key: "fullName",
       render: (record: UserData) => `${record.firstName} ${record.lastName}`,
     },
     {
-      title: "Email",
+      title: formatMessage({ id: "page.users.table.column.title.email" }),
       dataIndex: "email",
       key: "email",
       sorter: (a: UserData, b: UserData) => a.email.localeCompare(b.email),
@@ -82,7 +88,7 @@ export function Users() {
     // * includes a fallback to a placeholder image in case of a broken image link
     // * offers built-in support for hover zoom and full-screen preview
     {
-      title: "Image",
+      title: formatMessage({ id: "page.users.table.column.title.image" }),
       dataIndex: "image",
       key: "image",
       render: (image: string) => (
@@ -101,8 +107,8 @@ export function Users() {
     return (
       <ContentLayout>
         <Alert
-          message="Error"
-          description="Failed to fetch users"
+          message={formatMessage({ id: "page.users.alert.message" })}
+          description={formatMessage({ id: "page.users.alert.description" })}
           type="error"
           showIcon
           closable
@@ -114,14 +120,16 @@ export function Users() {
   if (isLoading) {
     return (
       <ContentLayout>
-        <Spin tip="Loading users..." size="large" />
+        <Spin tip={formatMessage({ id: "page.users.spin.tip" })} size="large" />
       </ContentLayout>
     );
   }
 
   return (
     <ContentLayout>
-      <Typography.Title level={2}>Users</Typography.Title>
+      <Typography.Title level={2}>
+        {formatMessage({ id: "page.users.title" })}
+      </Typography.Title>
       <Table
         dataSource={filteredData}
         columns={columns}

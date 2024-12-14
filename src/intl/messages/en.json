@@ -57,5 +57,16 @@
   "page.userProfile.form.accessInfo.passwordConfirm": "Confirm Password",
   "page.userProfile.form.accessInfo.passwordConfirm.missMatchError": "The confirmation password does not match the new password.",
 
-  "page.crudExamples.detail.tab.information": "Information"
+  "page.crudExamples.detail.tab.information": "Information",
+
+  "page.users.table.column.title.id": "ID",
+  "page.users.table.column.title.first_name.placeholder": "First Name",
+  "page.users.table.column.title.last_name.placeholder": "Last Name",
+  "page.users.table.column.title.name": "Name",
+  "page.users.table.column.title.email": "Email",
+  "page.users.table.column.title.image": "Image",
+  "page.users.alert.message": "Error",
+  "page.users.alert.description": "Failed to fetch users",
+  "page.users.spin.tip": "Loading users...",
+  "page.users.title": "Users"
 }
