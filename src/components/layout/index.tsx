@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useState } from "react";
 import { Col, Layout, Row, theme } from "antd";
+import { TableOutlined } from "@ant-design/icons";
 import { AppHeader } from "./header";
 import { AppSidebar } from "./sidebar";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
@@ -11,6 +12,7 @@ export enum AppPath {
   brandProfile = "/brandProfile",
   userProfile = "/profile",
   crud = "/",
+  users = "/users",
 }
 
 export type AppLayoutContextType = {
@@ -37,7 +39,13 @@ export function AppLayout({ children }: PropsWithChildren) {
   const contentMinWidth = "65vw";
   const contentMaxWidth = "1100px";
 
-  const [sidebarItems, setSidebarItems] = useState<MenuItemType[]>([]);
+  const [sidebarItems, setSidebarItems] = useState<MenuItemType[]>([
+    {
+      key: AppPath.users,
+      label: "Users",
+      icon: <TableOutlined />,
+    },
+  ]);
 
   const addSidebarItem = (menuItem: MenuItemType) => {
     setSidebarItems((prev) => {
