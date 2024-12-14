@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import { Table, Typography, Spin, Alert, Image } from "antd";
 import ContentLayout from "components/layout/content/contentLayout";
-import UsersService from "services/users";
+import { useGetUsers } from "hooks/react-query/users/useGetUsers";
 
 const { Title } = Typography;
 const columns = [
@@ -41,41 +40,14 @@ const columns = [
 ];
 
 export function Users() {
-  const [usersData, setUsersData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, isError } = useGetUsers();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const data = await UsersService.getAll();
-        setUsersData(data?.list || []);
-      } catch (err) {
-        setError("Failed to fetch users");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  if (loading) {
-    return (
-      <ContentLayout>
-        <Spin tip="Loading users..." size="large" />
-      </ContentLayout>
-    );
-  }
-
-  if (error) {
+  if (isError) {
     return (
       <ContentLayout>
         <Alert
           message="Error"
-          description={error}
+          description="Failed to fetch users"
           type="error"
           showIcon
           closable
@@ -84,11 +56,19 @@ export function Users() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <ContentLayout>
+        <Spin tip="Loading users..." size="large" />
+      </ContentLayout>
+    );
+  }
+
   return (
     <ContentLayout>
       <Title level={2}>Users</Title>
       <Table
-        dataSource={usersData}
+        dataSource={data?.list || []}
         columns={columns}
         rowKey="id"
         pagination={{ pageSize: 13 }}

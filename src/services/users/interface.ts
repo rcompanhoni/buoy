@@ -14,5 +14,5 @@ export interface PaginatedUsers {
 }
 
 export abstract class UsersService extends AuthedService {
-  abstract getAll(): Promise<PaginatedUsers | undefined>;
+  abstract getAll(): Promise<PaginatedUsers>;
 }
