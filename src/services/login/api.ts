@@ -1,6 +1,9 @@
 import { LoginService, LoginRequestData, LoginResponseData } from "./interface";
 
 export class LoginApiService extends LoginService {
+  // the promise of the refresh operation so that concurrent requests can share the result
+  private refreshPromise: Promise<LoginResponseData | null> | null = null;
+
   public async login(payload: LoginRequestData): Promise<LoginResponseData> {
     const response: LoginResponseData = await this.fetchPost(
       "/login/",
@@ -32,19 +35,38 @@ export class LoginApiService extends LoginService {
       const parsedToken = this.parseJwt(token?.access);
 
       if (new Date().getTime() / 1000 > parsedToken.exp) {
-        const response: LoginResponseData = await this.fetchPost(
-          "/refresh/",
-          { method: "POST" },
-          { refresh: token.refresh }
+        // if a refresh is already in progress, return the ongoing promise, otherwise initiate the refreshAccessToken promise
+        return (
+          this.refreshPromise ??
+          (this.refreshPromise = this.refreshAccessToken(token.refresh))
         );
-        this.storeInLocalStorage(response);
       }
-      return this.retrieveFromLocalStorage();
     } catch (e) {
       console.log(e);
       this.logout();
     }
     return null;
+  }
+
+  private async refreshAccessToken(
+    refreshToken: string
+  ): Promise<LoginResponseData | null> {
+    try {
+      const response: LoginResponseData = await this.fetchPost(
+        "/refresh/",
+        { method: "POST" },
+        { refresh: refreshToken }
+      );
+
+      this.storeInLocalStorage(response);
+      return this.retrieveFromLocalStorage();
+    } catch (error) {
+      console.error("Token refresh failed", error);
+      throw error;
+    } finally {
+      // reset state after refresh is complete
+      this.refreshPromise = null;
+    }
   }
 
   private loginDataKey = "loginData";

@@ -75,7 +75,11 @@ In a production environment, with a proper JWT generating API, and a proper JWT 
 
 Provide an answer below:
 
-> DELETE THIS QUOTE AND REPLACE IT WITH YOUR ANSWER
+_A refresh token allows the application to obtain a new access token without requiring the user to log in again. This avoids the need for the user to provide their credentials frequently, such as every time the short-lived access token expires. Keeping this issue unresolved could lead to two main problems:_
+
+_- **Performance issues**: As the user base grows and the number of components using the `AuthedService` increases, the server will start receiving an ever-increasing volume of refresh requests, slowing the overall response time or even causing it to crash._
+
+_- **Race conditions**: For a single user making multiple concurrent requests, if the first request successfully refreshes the token and updates localStorage, but a second overlapping request fails and clears localStorage, the valid token from the first request will be lost, causing the user to be logged out._
 
 ---
 
