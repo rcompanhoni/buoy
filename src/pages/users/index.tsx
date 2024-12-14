@@ -1,9 +1,11 @@
 import { Table, Typography, Spin, Alert, Image } from "antd";
+import { ColumnsType } from "antd/es/table";
 import ContentLayout from "components/layout/content/contentLayout";
 import { useGetUsers } from "hooks/react-query/users/useGetUsers";
+import { UserData } from "services/users/interface";
 
 const { Title } = Typography;
-const columns = [
+const columns: ColumnsType<UserData> = [
   {
     title: "ID",
     dataIndex: "id",
@@ -22,12 +24,14 @@ const columns = [
   {
     title: "Name",
     key: "fullName",
-    render: (record: any) => `${record.firstName} ${record.lastName}`,
+    render: (record: UserData) => `${record.firstName} ${record.lastName}`,
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
+    sorter: (a: UserData, b: UserData) => a.email.localeCompare(b.email), // compares the email fields alphabetically.
+    sortDirections: ["ascend", "descend"],
   },
 
   // Reasons for rendering user images with the Ant Design <Image> component:
