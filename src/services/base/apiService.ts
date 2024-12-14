@@ -3,6 +3,11 @@ export class ApiService {
   private apiVersion: string = "v1";
 
   protected buildEndpoint = (endpoint: string) => {
+    // if the endpoint is an absolute URL, return it as is
+    if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+      return endpoint;
+    }
+
     // Django needs endpoints with no query params to end with a trailing backslash
     const host = `${ApiService.apiUrl}/`;
     const path = `${this.apiVersion}/${endpoint}`.replaceAll("//", "/");

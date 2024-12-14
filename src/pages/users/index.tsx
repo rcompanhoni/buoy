@@ -1,26 +1,9 @@
-import { useState } from "react";
-import { Table, Image, Typography } from "antd";
+import { useEffect, useState } from "react";
+import { Table, Typography, Spin, Alert, Image } from "antd";
 import ContentLayout from "components/layout/content/contentLayout";
+import UsersService from "services/users";
 
-const { Text } = Typography;
-
-const mockedData = [
-  {
-    id: 1,
-    firstName: "Emily",
-    lastName: "Johnson",
-    email: "emily.johnson@x.dummyjson.com",
-    image: "https://dummyjson.com/icon/emilys/128",
-  },
-  {
-    id: 2,
-    firstName: "Michael",
-    lastName: "Williams",
-    email: "michael.williams@x.dummyjson.com",
-    image: "https://dummyjson.com/icon/michaelw/128",
-  },
-];
-
+const { Title } = Typography;
 const columns = [
   {
     title: "ID",
@@ -40,9 +23,7 @@ const columns = [
   {
     title: "Name",
     key: "fullName",
-    render: (_: any, record: { firstName: string; lastName: string }) => (
-      <Text>{`${record.firstName} ${record.lastName}`}</Text>
-    ),
+    render: (record: any) => `${record.firstName} ${record.lastName}`,
   },
   {
     title: "Email",
@@ -51,22 +32,64 @@ const columns = [
   },
   {
     title: "Image",
+    dataIndex: "image",
     key: "image",
-    render: (_: any, record: { image: string }) => (
-      <Image src={record.image} alt="User Image" width={50} height={50} />
+    render: (image: string) => (
+      <Image src={image} alt="User Image" width={50} height={50} />
     ),
   },
 ];
 
 export function Users() {
-  const [data, setData] = useState(mockedData);
+  const [usersData, setUsersData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        const data = await UsersService.getAll();
+        setUsersData(data?.list || []);
+      } catch (err) {
+        setError("Failed to fetch users");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  if (loading) {
+    return (
+      <ContentLayout>
+        <Spin tip="Loading users..." size="large" />
+      </ContentLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <ContentLayout>
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          closable
+        />
+      </ContentLayout>
+    );
+  }
 
   return (
     <ContentLayout>
-      <Typography.Title level={2}>Users</Typography.Title>
+      <Title level={2}>Users</Title>
       <Table
+        dataSource={usersData}
         columns={columns}
-        dataSource={data}
         rowKey="id"
         pagination={{ pageSize: 13 }}
       />

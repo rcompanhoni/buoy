@@ -11,3 +11,9 @@
 .ant-layout .ant-layout-sider-trigger {
   background: var(--colorBgContainer) !important;
 }
+
+/* ensures that error titles and descriptions have a readable text color */
+.ant-alert-error .ant-alert-message,
+.ant-alert-error .ant-alert-description {
+  color: black !important;
+}
