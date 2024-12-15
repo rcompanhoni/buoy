@@ -154,6 +154,42 @@ _The table headers for `firstName` and `lastName` were replaced with input field
 
 _To ensure a consistent user experience, all static strings in the `Users` page have been internationalized using `react-intl`. Both English (`en.json`) and Spanish (`es.json`) translations are included in this implementation._
 
+### _Notes on Testing Attempts_
+
+_**Due to Jest configuration issues, tests could not be executed successfully**. The example below demonstrates a unit test for the `Users` page, simulating the loading state and verifying the correct UI behavior. The test uses the `useGetUsers` hook, mocking its return values to reflect the loading state and asserting the presence of the loading spinner:_
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import { Users } from "./index";
+import { useGetUsers } from "hooks/react-query/users/useGetUsers";
+
+jest.mock("hooks/react-query/users/useGetUsers");
+
+describe("Users Page", () => {
+  it("renders loading spinner when data is loading", () => {
+    // mock the new React Query hook
+    (useGetUsers as jest.Mock).mockReturnValue({
+      data: null,
+      isLoading: true,
+      isError: false,
+    });
+
+    render(<Users />);
+
+    // assert that the loading spinner is visible
+    expect(screen.getByText(/Loading users.../i)).toBeInTheDocument();
+  });
+});
+```
+
+### _Attempts to Resolve Jest Issues_
+
+_Attempts to configure Jest included overriding CRA's default settings using `react-app-rewired` and `customize-cra`. Adjustments to Jest's `transformIgnorePatterns` were made to explicitly include the `antd` modules. Various Babel configurations (via `.babelrc` and `babel.config.js`) were also tested to ensure proper transformation of JSX syntax and the `antd` library, but these efforts were unsuccessful._
+
+### _Proposed Solution for Resolving Jest Configuration Issues_
+
+_To resolve the Jest configuration issues, I would propose initializing a new CRA project but ensuring that Jest and React Testing Library (RTL) tests work from the beginning. The existing codebase could then be incrementally migrated into the new project, with tests performed at each step to ensure functionality. This approach would effectively isolate and address any misconfigurations or dependency conflicts._
+
 ---
 
 ## TECH CONTEXT
