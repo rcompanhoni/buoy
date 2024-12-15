@@ -133,6 +133,27 @@ Reference:
 
 > EXTRA POINTS: WRITE HERE ANY EXTRA COMMENTS OR NOTES YOU FIND RELEVANT
 
+_Overview of the main components created for Problem #2:_
+
+### _UsersService_
+
+_Following the same pattern used for other entities, `services/users` extends from `AuthedService` and includes both the real `api.ts` and the `fake.ts`, making it possible to switch between them by toggling the environment variable `REACT_APP_FAKE_API_MODE`. The `api.ts` endpoint is optimized to fetch all users in a single request, retrieving only the necessary fields (**https://dummyjson.com/users?limit=0&select=id,firstName,lastName,email,image**)._
+
+### _Custom React Query Hook (useGetUsers)_
+
+_I chose to implement a custom React Query hook (`useGetUsers`) rather than expanding on `useCRUDBuilder` because the requirements explicitly specify that the `Users` page should list all users, not just users related to a given brand. Some notes about the `useGetUsers` hook:_
+
+- `staleTime`**:** Defines how long the cached data is considered "fresh." During this period, React Query will serve the cached data without re-fetching it from the server. The value of 5 minutes can be adjusted according to real-world usage expectations.\*
+- `retry`**:** Specifies how many times React Query should retry the `queryFn` (data fetching function) in case of a failure. This enhances resilience in cases of temporary network issues.\*
+
+### _Users Page (antd columns, filtering + useMemo, internationalization)_
+
+_The `useGetUsers` hook is used here to fetch data from the server and handle all 5 UI states. The implementation makes proper use of TypeScript, such as when defining the Ant Design `ColumnsType`. The Ant Design `<Image>` component is used for better performance and built-in features (see comments in the code)._
+
+_The table headers for `firstName` and `lastName` were replaced with input fields that serve as filtering inputs. These are handled by `handleFilterChange`, which uses lodash’s `debounce` method for improved UX and performance. The actual data rendered at any given point is stored in the `filteredData` variable, which is calculated using a `useMemo` that depends only on the `data` and the applied `filters`._
+
+_To ensure a consistent user experience, all static strings in the `Users` page have been internationalized using `react-intl`. Both English (`en.json`) and Spanish (`es.json`) translations are included in this implementation._
+
 ---
 
 ## TECH CONTEXT
